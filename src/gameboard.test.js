@@ -23,7 +23,7 @@ describe("Gameboard Tests", ()=>{
         const testShip5 = new Ship(5);
 
         expect(testGameBoard.placeShip(6, 8, testShip5, "horizontal")).toBe(false);
-        expect(testGameBoard.placeShip(1, 7, testShip5, "vertical")).toBe(false);
+        expect(testGameBoard.placeShip(7, 1, testShip5, "vertical")).toBe(false);
     })
 
     test("ships receives the attacks", ()=>{
@@ -31,8 +31,9 @@ describe("Gameboard Tests", ()=>{
 
         testGameBoard.placeShip(2, 3, testShip3, "vertical");
 
-        expect(testGameBoard.receiveAttack(2,4)).toBe(true);
-        expect(testGameBoard.board[4][2].hit).toBe(true);
+        expect(testGameBoard.receiveAttack(4,3)).toBe(true);
+        expect(testGameBoard.board[4][3].hit).toBe(true);
+        expect(testGameBoard.board[4][3].occupied).toBe(true);
         expect(testShip3.hits).toBe(1);
     })
 

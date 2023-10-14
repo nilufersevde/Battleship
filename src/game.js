@@ -15,7 +15,6 @@ export default class Game {
 
     }
 
-
     //method that renders a board 
     renderBoard(boardData, boardDOM, prefix){
 
@@ -42,10 +41,10 @@ export default class Game {
             
         });
 
-                // Use the function to render the user board
+        // Use the function to render the human board
         renderBoard(this.humanPlayer.gameBoard.board, this.humanBoardDOM, 'h');
 
-        // Use the function to render the enemy board
+        // Use the function to render the computer board
         renderBoard(this.computerPlayer.gameBoard.board, this.computerBoardDOM, 'c');
          
         
@@ -55,6 +54,7 @@ export default class Game {
     //method that places the ships
 
     placeShips() {
+
         if (currentShipIndex > this.humanPlayer.fleet){
             return;
         }
@@ -64,7 +64,61 @@ export default class Game {
         oldHumanBoardDOM.parentNode.replaceChild(this.humanBoardDOM, oldHumanBoardDOM);
 
         const boardCells = this.humanBoardDOM.querySelectorAll(".cell");
+        const currentShip = this.humanPlayer.fleet[this.currentShipIndex];
+
         boardCells.forEach((cell) => {
+
+            const cellIndex = Array.from(boardCells).indexOf(cell);
+
+            if( this.currentDirection === "horizontal" && (cellIndex % 10)+ currentShip.getShipLength > 10){
+                return;
+
+            }
+
+            if( this.currentDirection === "vertical" && Math.floor(cellIndex / 10) + currentShip.getShipLength > 10){
+                return;
+
+            }
+
+
+
+            cell.addEventListener("mouseover", () => {
+
+                if (this.currentDirection === "horizontal") {
+                    
+                    for (let i = 0; i < currentShip.getShipLength; i++){
+                        boardCells[cellIndex+i].classList.add(ship-preview);
+                    }
+                }
+
+                else {
+
+                    for (let i = 0; i < currentShip.getShipLength; i++){
+                        boardCells[cellIndex+i*10].classList.add(ship-preview);
+                    }
+                }
+            })
+
+            cell.addEventListener("mouseout", () => {
+
+                if (this.currentDirection === "horizontal") {
+                    
+                    for (let i = 0; i < currentShip.getShipLength; i++){
+                        boardCells[cellIndex+i].classList.remove(ship-preview);
+                    }
+                }
+
+                else {
+
+                    for (let i = 0; i < currentShip.getShipLength; i++){
+                        boardCells[cellIndex+i*10].classList.remove(ship-preview);
+                    }
+                }
+            })
+
+            cell.addEventListener("click", ()=> {      
+                const x =  Math.floor(cellIndex / 10);
+            })
 
         })
 
@@ -90,9 +144,5 @@ export default class Game {
     //the game logic with attacking checking the status rendering the grids and everything 
 
 
-    //reset the game
-
-
-
-    
+    //reset the game    
 }

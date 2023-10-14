@@ -11,7 +11,7 @@ describe("Player tests", ()=>{
     test("Player attacks", () => {
         const enemyboard = new Gameboard();
         testPlayer.attack(1, 2 ,enemyboard);
-        expect(enemyboard.board[2][1].hit).toBe(true);
+        expect(enemyboard.board[1][2].hit).toBe(true);
     })
 
     test("Place a single ship and check coordinates", () => {
@@ -39,8 +39,8 @@ describe("Player tests", ()=>{
                 expect(y).toBeGreaterThanOrEqual(0);
                 expect(y).toBeLessThan(10);
                 //Check that the ship occupies the correct cells on the gameboard
-                expect(testPlayer.gameboard.board[y][x].ship).toBe(ship);
-                console.log(testPlayer.gameboard.board[y][x]);
+                expect(testPlayer.gameboard.board[x][y].ship).toBe(ship);
+                console.log(testPlayer.gameboard.board[x][y]);
             });
         })
     })

@@ -20,30 +20,29 @@ export default class Gameboard {
 
             //if horizontal 
             if(direction === "horizontal"){
-
-                if((x + ship.length)>10){
+                if((y + ship.length)>10){
                     return false;
                 }
 
                 for(let i=0; i<ship.length; i++){
-                    const cell = this.board[y][x+i];
+                    const cell = this.board[x][y+i];
                     cells.push(cell);
                     if (cells.some((cell => cell.occupied))) {
                         ship.coordinates =[];
                         return false;
                         }
 
-                    ship.coordinates.push({ x:x+i, y });
+                    ship.coordinates.push({ x, y: y + i });
             }}
 
             //if vertical 
             else {
-                if (y + ship.length > 10) {
+                if (x + ship.length > 10) {
                   return false;
                 }
           
                 for (let i = 0; i < ship.length; i++) {
-                  const cell = this.board[y + i][x];
+                  const cell = this.board[x + i][y];
                   
                   cells.push(cell);
                   if (cells.some((cell => cell.occupied))) {
@@ -51,14 +50,11 @@ export default class Gameboard {
                     return false;
                     }
                   
-                  ship.coordinates.push({ x, y:y+i });
+                  ship.coordinates.push({ x: x + i, y });
                   
                 }
               }    
               
-            
-            
-            
             //changes the status of the cells as occupied after placing the ship 
             cells.forEach((cell) => {
                 cell.occupied = true;
@@ -72,12 +68,12 @@ export default class Gameboard {
         //when receive an attack checks if that cell already been hit, if not checks if there is a ship there, if yes hits the ship
         receiveAttack(x, y){
 
-            if (x < 0 || x >= 10 || y < 0 || y >= 10 || this.board[y][x].hit) {
+            if (x < 0 || x >= 10 || y < 0 || y >= 10 || this.board[x][y].hit) {
                 return false; // Coordinates are out of bounds
             }
             
             else {
-            const cell = this.board[y][x];
+            const cell = this.board[x][y];
             cell.hit = true;
 
             if (cell.occupied){
@@ -93,7 +89,7 @@ export default class Gameboard {
 
             for(let i=0; i<10; i++){
                 for(let j=0; j<10; j++) {
-                    const cell = this.board[j][i];
+                    const cell = this.board[i][j];
                     if (cell.occupied == true && cell.hit == false){
                         return false;
                     }
