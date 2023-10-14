@@ -11,7 +11,8 @@ export default class Game {
         this.restartButton = document.querySelector(".restart-button");
         this.currentDirection = "horizontal";
         this.currentShipIndex = 0;
-        this.shipRepresentations = document.querySelector(".ship-representations");
+        this.shipRepresentationArray = [];
+        this.isHumanTurn = true;
 
     }
 
@@ -22,7 +23,6 @@ export default class Game {
         let cellIndex = 0;
 
         boardData.forEach(cell => {
-
             const cellDOM = document.createElement("div");
             cellDOM.classList.add("cell");
 
@@ -37,47 +37,47 @@ export default class Game {
             cellDOM.setAttribute("id", `${prefix}${cellIndex}`);
             cellIndex++;
 
-            boardDOM.appendChild(cellDOM);
-            
+            boardDOM.appendChild(cellDOM); 
         });
+    }
 
+
+     // Method to render ship representations
+     renderShipRepresentations() {
+
+        this.computerBoardDOM.innerHTML = "";
+        this.humanPlayer.fleet.forEach((ship) => {
+            const shipRepresentation = document.createElement("div");
+            shipRepresentation.classList.add("ship-preview");
+          
+            for (let i = 0; i < ship.getShipLength(); i++) {
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                shipRepresentation.appendChild(cell);
+            }
+          
+            this.computerBoardDOM.appendChild(shipRepresentation);
+            this.shipRepresentations.push(shipRepresentation);
+        });
     }
 
 
     //method that places the ships
     placeShips() {
 
-        //checks if we placed all the ships if yes removes the rotate button and renders the computer's board
+        //checks if all the ships are placed if yes removes the rotate button and renders the computer's board
         if (currentShipIndex > this.humanPlayer.fleet){
             this.rotateButton.classList.add("hidden");
+            this.computerBoardDOM.innerHTML = "";
             this.renderBoard(this.computerPlayer.gameBoard.board, this.computerBoardDOM, 'c');
             return;
         }
-
-
-        //shows the representaion of the ships that should be placed in the human's board
-        shipRepresentationsContainer.innerHTML = "";
-
-        // Add ship representations
-        this.humanPlayer.fleet.forEach((ship) => {
-          const shipRepresentation = document.createElement("div");
-          shipRepresentation.classList.add("ship-representation");
-      
-          for (let i = 0; i < ship.getShipLength(); i++) {
-            const cell = document.createElement("div");
-            cell.classList.add("cell");
-            shipRepresentation.appendChild(cell);
-          }
-      
-          shipRepresentationsContainer.appendChild(shipRepresentation);
-        });
-
 
         //creates a clone of the human's board to keep it clean with previews
         const oldHumanBoardDOM = this.humanBoardDOM;
         this.humanBoardDOM = oldHumanBoardDOM.cloneNode(true);
         oldHumanBoardDOM.parentNode.replaceChild(this.humanBoardDOM, oldHumanBoardDOM);
-
+        //getting the board cells and current ship
         const boardCells = this.humanBoardDOM.querySelectorAll(".cell");
         const currentShip = this.humanPlayer.fleet[this.currentShipIndex];
 
@@ -89,7 +89,6 @@ export default class Game {
             if( this.currentDirection === "horizontal" && (cellIndex % 10)+ currentShip.getShipLength > 10){
                 return;
             }
-
             if( this.currentDirection === "vertical" && Math.floor(cellIndex / 10) + currentShip.getShipLength > 10){
                 return;
             }
@@ -100,13 +99,12 @@ export default class Game {
 
                 if (this.currentDirection === "horizontal") { 
                     for (let i = 0; i < currentShip.getShipLength; i++){
-                        boardCells[cellIndex+i].classList.add(ship-preview);
+                        boardCells[cellIndex+i].classList.add("ship-preview");
                     }
                 }
-
                 else {
                     for (let i = 0; i < currentShip.getShipLength; i++){
-                        boardCells[cellIndex+i*10].classList.add(ship-preview);
+                        boardCells[cellIndex+i*10].classList.add("ship-preview");
                     }
                 }
 
@@ -116,13 +114,12 @@ export default class Game {
 
                 if (this.currentDirection === "horizontal") {
                     for (let i = 0; i < currentShip.getShipLength; i++){
-                        boardCells[cellIndex+i].classList.remove(ship-preview);
+                        boardCells[cellIndex+i].classList.remove("ship-preview");
                     }
                 }
-
                 else {
                     for (let i = 0; i < currentShip.getShipLength; i++){
-                        boardCells[cellIndex+i*10].classList.remove(ship-preview);
+                        boardCells[cellIndex+i*10].classList.remove("ship-preview");
                     }
                 }
             })
@@ -131,21 +128,20 @@ export default class Game {
             cell.addEventListener("click", ()=> {      
                 const x =  Math.floor(cellIndex / 10);
                 const y = cellIndex % 10;
-
                 const placed = this.humanPlayer.gameboard.placeShip(x, y, currentShip, this.currentDirection);
 
                 if (placed) {
-                    this.renderBoard();
+
+                    this.renderBoard(this.humanPlayer.gameBoard.board, this.humanBoardDOM, 'h');
+                    this.shipRepresentationArray[currentShipIndex].classList.remove("ship-preview");
+                    this.shipRepresentationArray[currentShipIndex].classList.add("ship-placed");
                     this.currentShipIndex++;
                     this.placeShips()
+
                 }
-
             })
-
         })
-
     }
-
 
 
     //ship rotation 
@@ -161,20 +157,22 @@ export default class Game {
 
 
     //initiliaze the game
-
     initiliazeGame() {
 
           this.renderBoard(this.humanPlayer.gameBoard.board, this.humanBoardDOM, 'h');
           this.computerPlayer.randomPlacement();
           this.handleShipRotation();
+          this.renderShipRepresentations();
           this.placeShips();
-
 
     }
 
-
-
     //the game logic with attacking checking the status rendering the grids and everything 
+
+    gamePlay() {
+        
+
+    }
 
 
     //reset the game    
