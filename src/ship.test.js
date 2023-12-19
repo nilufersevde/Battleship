@@ -1,4 +1,4 @@
-import Ship from "../Ship.js";
+import Ship from "./ship.js";
 
 describe("Ship tests", () => {
   let testShip;
@@ -8,13 +8,13 @@ describe("Ship tests", () => {
 
   test("Ship gets hit", () => {
     testShip.hit();
-    expect(testShip.damage).toBe(1);
+    expect(testShip.hits).toBe(1);
   });
 
   test("Ship gets multiple hits", () => {
     testShip.hit();
     testShip.hit();
-    expect(testShip.damage).toBe(2);
+    expect(testShip.hits).toBe(2);
   });
 
   test("Ship is not sunk", () => {
