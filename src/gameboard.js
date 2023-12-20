@@ -2,8 +2,6 @@ export default class Gameboard {
         constructor() {
             this.board = [];
             this.initializeBoard();
-            this.placeShip(); 
-            this.receiveAttack()
           }
         
         //initializes board with cells that has x,y coordinates, occupation status and the ship 
@@ -63,13 +61,12 @@ export default class Gameboard {
         //when receive an attack checks if that cell already been hit, if not checks if there is a ship there, if yes hits the ship
         receiveAttack(x,y){
 
-            const cell =  this.board[y][x];
-
-            if (cell.hit){
-                return false
+            if (x < 0 || x >= 10 || y < 0 || y >= 10 || this.board[y][x].hit) {
+                return false; // Coordinates are out of bounds
             }
             
             else {
+            const cell = this.board[y][x] ;
             cell.hit = true;
 
             if (cell.occupied){
