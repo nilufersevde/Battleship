@@ -66,7 +66,7 @@ export default class Gameboard {
             }
             
             else {
-            const cell = this.board[y][x] ;
+            const cell = this.board[y][x];
             cell.hit = true;
 
             if (cell.occupied){
