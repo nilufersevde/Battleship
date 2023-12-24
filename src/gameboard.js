@@ -28,6 +28,12 @@ export default class Gameboard {
                 for(let i=0; i<ship.length; i++){
                     const cell = this.board[y][x+i];
                     cells.push(cell);
+                    if (cells.some((cell => cell.occupied))) {
+                        ship.coordinates =[];
+                        return false;
+                        }
+
+                    ship.coordinates.push({ x:x+i, y });
             }}
 
             //if vertical 
@@ -38,15 +44,20 @@ export default class Gameboard {
           
                 for (let i = 0; i < ship.length; i++) {
                   const cell = this.board[y + i][x];
+                  
                   cells.push(cell);
-                }
-              }
-
-
-            //checks if the cells are already occupied or not       
-            if (cells.some((cell => cell.occupied))) {
+                  if (cells.some((cell => cell.occupied))) {
+                    ship.coordinates =[];
                     return false;
-            }
+                    }
+                  
+                  ship.coordinates.push({ x, y:y+i });
+                  
+                }
+              }    
+              
+            
+            
             
             //changes the status of the cells as occupied after placing the ship 
             cells.forEach((cell) => {
@@ -59,7 +70,7 @@ export default class Gameboard {
 
 
         //when receive an attack checks if that cell already been hit, if not checks if there is a ship there, if yes hits the ship
-        receiveAttack(x,y){
+        receiveAttack(x, y){
 
             if (x < 0 || x >= 10 || y < 0 || y >= 10 || this.board[y][x].hit) {
                 return false; // Coordinates are out of bounds

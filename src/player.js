@@ -1,4 +1,4 @@
-import Gameboard from "/.gameboard.js";
+import Gameboard from "./gameboard.js";
 import Ship from "./ship.js";
 
 export default class Player {
@@ -11,22 +11,23 @@ export default class Player {
     }
 
     attack(x, y, enemyboard){
-        enemyboard.receiveAttack(x, y);
-
+        return enemyboard.receiveAttack(x, y);
     }
 
     randomPlacement(){
 
         this.fleet.forEach((ship) => {
-            const placed = false;
+            let placed = false;
 
             while(!placed){
 
-            const x = Math.floor(Math.random*10);
-            const y = Math.floor(Math.random*10);
+            const x = Math.floor(Math.random()*10);
+            const y = Math.floor(Math.random()*10);
             const direction = Math.random() > 0.5 ? 'horizontal' : 'vertical';
 
-            placed = this.gameboard.placeShip(x, y, ship, direction);}
+            placed = this.gameboard.placeShip(x, y, ship, direction);
+            
+        }
 
         })
     }
@@ -36,9 +37,9 @@ export default class Player {
 
         while(!received){
 
-            const x = Math.floor(Math.random*10);
-            const y = Math.floor(Math.random*10);
-            enemyboard.receiveAttack(x, y);
+            const x = Math.floor(Math.random()*10);
+            const y = Math.floor(Math.random()*10);
+            received = enemyboard.receiveAttack(x, y);
         }
     }
 
