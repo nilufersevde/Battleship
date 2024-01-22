@@ -1,4 +1,3 @@
-import Ship from "./ship.js";
 import Gameboard from "./gameboard.js";
 import Player from "./player.js";
 
@@ -49,9 +48,16 @@ describe("Player tests", ()=>{
     test("Don't let hit a cell that has already been hit", () => {
         const enemyboard = new Gameboard();
 
-        console.log(testPlayer.attack(1, 2, enemyboard));
+        testPlayer.attack(1, 2, enemyboard);
         expect(testPlayer.attack(1, 2, enemyboard)).toBe(false);
 
+    })
+
+    test("Switch turn when attack", () => {
+        const enemyboard = new Gameboard();
+
+        testPlayer.attack(3, 5, enemyboard);
+        expect(testPlayer.isPlayerTurn).toBe(false);
     })
 
 })
