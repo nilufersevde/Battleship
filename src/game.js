@@ -5,7 +5,7 @@ export default class Game {
 
         this.humanPlayer = new Player;
         this.computerPlayer = new Player;
-        this.userBoardDOM = document.querySelector(".user-board");
+        this.humanBoardDOM = document.querySelector(".user-board");
         this.computerBoardDOM = document.querySelector(".computer-board");
         this.rotateButton = document.querySelector(".rotate-button");
         this.startButton = document.querySelector(".start-button");
@@ -43,10 +43,10 @@ export default class Game {
         });
 
                 // Use the function to render the user board
-        renderBoard(this.humanPlayer.gameBoard.board, this.userBoardDOM, 'h');
+        renderBoard(this.humanPlayer.gameBoard.board, this.humanBoardDOM, 'h');
 
         // Use the function to render the enemy board
-        renderBoard(this.computerPlayer.gameBoard.board, this.enemyBoardDOM, 'c');
+        renderBoard(this.computerPlayer.gameBoard.board, this.computerBoardDOM, 'c');
          
         
     }
@@ -59,12 +59,14 @@ export default class Game {
             return;
         }
 
-        const oldUserBoardDOM = this.userBoardDOM;
-        const newUserBoardDOM = oldUserBoardDOM.cloneNode(true); // Clone the board
-        oldUserBoardDOM.parentNode.replaceChild(newUserBoardDOM, oldUserBoardDOM);
-        this.userBoardDOM = newUserBoardDOM; // Update the reference
+        const oldHumanBoardDOM = this.humanBoardDOM;
+        this.humanBoardDOM = oldHumanBoardDOM.cloneNode(true);
+        oldHumanBoardDOM.parentNode.replaceChild(this.humanBoardDOM, oldHumanBoardDOM);
 
+        const boardCells = this.humanBoardDOM.querySelectorAll(".cell");
+        boardCells.forEach((cell) => {
 
+        })
 
     }
 
@@ -83,13 +85,6 @@ export default class Game {
 
 
     //initiliaze the game
-
-
-    
-
-
-
-    
 
 
     //the game logic with attacking checking the status rendering the grids and everything 
