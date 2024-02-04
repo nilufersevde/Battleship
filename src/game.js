@@ -41,18 +41,10 @@ export default class Game {
             
         });
 
-        // Use the function to render the human board
-        renderBoard(this.humanPlayer.gameBoard.board, this.humanBoardDOM, 'h');
-
-        // Use the function to render the computer board
-        renderBoard(this.computerPlayer.gameBoard.board, this.computerBoardDOM, 'c');
-         
-        
     }
 
 
     //method that places the ships
-
     placeShips() {
 
         if (currentShipIndex > this.humanPlayer.fleet){
@@ -118,6 +110,16 @@ export default class Game {
 
             cell.addEventListener("click", ()=> {      
                 const x =  Math.floor(cellIndex / 10);
+                const y = cellIndex % 10;
+
+                const placed = this.humanPlayer.gameboard.placeShip(x, y, currentShip, this.currentDirection);
+
+                if (placed) {
+                    this.renderBoard();
+                    this.currentShipIndex++;
+                    this.placeShips()
+                }
+
             })
 
         })
@@ -139,6 +141,22 @@ export default class Game {
 
 
     //initiliaze the game
+
+    initiliazeGame() {
+
+          
+          this.renderBoard(this.humanPlayer.gameBoard.board, this.humanBoardDOM, 'h');
+          this.renderBoard(this.computerPlayer.gameBoard.board, this.computerBoardDOM, 'c');
+          this.computerPlayer.randomPlacement();
+          this.handleShipRotation();
+          this.placeShips();
+
+          
+
+
+
+    }
+
 
 
     //the game logic with attacking checking the status rendering the grids and everything 
