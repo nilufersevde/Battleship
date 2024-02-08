@@ -69,7 +69,7 @@ export default class Game {
         if (currentShipIndex > this.humanPlayer.fleet){
             this.rotateButton.classList.add("hidden");
             this.computerBoardDOM.innerHTML = "";
-            this.renderBoard(this.computerPlayer.gameBoard.board, this.computerBoardDOM, 'c');
+            this.renderBoard(this.computerPlayer.gameboard.board, this.computerBoardDOM, 'c');
             return;
         }
 
@@ -132,7 +132,7 @@ export default class Game {
 
                 if (placed) {
 
-                    this.renderBoard(this.humanPlayer.gameBoard.board, this.humanBoardDOM, 'h');
+                    this.renderBoard(this.humanPlayer.gameboard.board, this.humanBoardDOM, 'h');
                     this.shipRepresentationArray[currentShipIndex].classList.remove("ship-preview");
                     this.shipRepresentationArray[currentShipIndex].classList.add("ship-placed");
                     this.currentShipIndex++;
@@ -159,7 +159,7 @@ export default class Game {
     //initiliaze the game
     initiliazeGame() {
 
-          this.renderBoard(this.humanPlayer.gameBoard.board, this.humanBoardDOM, 'h');
+          this.renderBoard(this.humanPlayer.gameboard.board, this.humanBoardDOM, 'h');
           this.computerPlayer.randomPlacement();
           this.handleShipRotation();
           this.renderShipRepresentations();
@@ -170,7 +170,30 @@ export default class Game {
     //the game logic with attacking checking the status rendering the grids and everything 
 
     gamePlay() {
-        
+
+        const computerBoardCells = this.computerBoardDOM.querySelectorAll(".cell");
+
+        if (this.isHumanTurn) {
+
+            computerBoardCells.forEach((cell) => {
+                if(!cell.classList.contains("hit")) {
+                    cell.addEventListener("click", (e) => {
+                    const clickedCell = e.target;
+                    const cellIndex = parseInt(clickedCell.id.slice(1));
+                    const x =  Math.floor(cellIndex / 10);
+                    const y = cellIndex % 10;
+                    this.humanPlayer.attack(x, y, this.computerPlayer.gameboard);
+                    this.renderBoard(this.computerPlayer.gameboard.board, this.computerBoardDOM, 'c');
+                    if (this.computerPlayer.gameboard.areAllSunk()) {
+                        this.restartButton.classList.remove("hidden");
+                        this.resultDisplay.textContent = "You win!";
+                        this.resultDisplay.classList.remove("hidden");
+                        return;
+                      }
+                })
+            }    
+            })
+        }
 
     }
 
