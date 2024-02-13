@@ -13,6 +13,26 @@ export default class Game {
         this.currentShipIndex = 0;
         this.shipRepresentationArray = [];
         this.isHumanTurn = true;
+        this.result = document.querySelector(".result");
+        this.computerBoard = null;  
+        this.initializeGame();
+
+    }
+
+
+     //initiliaze the game
+    initiliazeGame() {
+
+          this.renderBoard(this.humanPlayer.gameboard.board, this.humanBoardDOM, 'h');
+          this.computerBoard = this.renderBoard(this.computerPlayer.gameboard.board, this.computerBoardDOM, 'c');
+          this.computerBoard.classList.add("hidden");
+          this.computerPlayer.randomPlacement();
+          this.handleShipRotation();
+          this.renderShipRepresentations();
+          this.placeShips();
+          this.restartButton.addEventListener("click", ()=>{
+          this.resetGame();
+          })
 
     }
 
@@ -69,7 +89,7 @@ export default class Game {
         if (currentShipIndex > this.humanPlayer.fleet){
             this.rotateButton.classList.add("hidden");
             this.computerBoardDOM.innerHTML = "";
-            this.renderBoard(this.computerPlayer.gameboard.board, this.computerBoardDOM, 'c');
+            this.computerBoard.classList.remove("hidden");
             return;
         }
 
@@ -156,16 +176,7 @@ export default class Game {
       }
 
 
-    //initiliaze the game
-    initiliazeGame() {
-
-          this.renderBoard(this.humanPlayer.gameboard.board, this.humanBoardDOM, 'h');
-          this.computerPlayer.randomPlacement();
-          this.handleShipRotation();
-          this.renderShipRepresentations();
-          this.placeShips();
-
-    }
+   
 
     //the game logic with attacking checking the status rendering the grids and everything 
 
@@ -176,22 +187,53 @@ export default class Game {
         if (this.isHumanTurn) {
 
             computerBoardCells.forEach((cell) => {
+
                 if(!cell.classList.contains("hit")) {
                     cell.addEventListener("click", (e) => {
+                    //find the clicked cell
                     const clickedCell = e.target;
+                    //find the coordinates of the cell
                     const cellIndex = parseInt(clickedCell.id.slice(1));
                     const x =  Math.floor(cellIndex / 10);
                     const y = cellIndex % 10;
+                    //attack the cell that was clicked on 
                     this.humanPlayer.attack(x, y, this.computerPlayer.gameboard);
                     this.renderBoard(this.computerPlayer.gameboard.board, this.computerBoardDOM, 'c');
+                    //if all the ships are sunk stop the game 
                     if (this.computerPlayer.gameboard.areAllSunk()) {
                         this.restartButton.classList.remove("hidden");
-                        this.resultDisplay.textContent = "You win!";
-                        this.resultDisplay.classList.remove("hidden");
+                        this.result.textContent = "You've won!";
+                        this.result.classList.remove("hidden");
                         return;
                       }
-                })
-            }    
+
+                    this.isHumanTurn = false;
+                    setTimeout(() => {
+                        this.gamePlay();
+                      }, 1000);
+
+                    //to allow player to only hit once 
+                }, {once: true});
+
+                } 
+                
+        else {
+
+                this.computerPlayer.randomAttack( this.humanPlayer.gameboard);
+                this.renderBoard(this.humanPlayer.gameboard.board, this.humanBoardDOM, 'h');
+                
+                //if all the ships are sunk stop the game 
+                if (this.humanPlayer.gameboard.areAllSunk()) {
+                    this.restartButton.classList.remove("hidden");
+                    this.result.textContent = "You've lost, computer have won!";
+                    this.result.classList.remove("hidden");
+                    return;
+                    }
+
+                    this.isUserTurn = true;
+                    this.gamePlay();
+
+                }
             })
         }
 
@@ -199,4 +241,26 @@ export default class Game {
 
 
     //reset the game    
+    resetGame() {
+
+        // Clear game boards and reset ship placements
+        this.humanPlayer.gameBoard.resetBoard();
+        this.computerPlayer.gameBoard.resetBoard();
+        // Reset ship representations
+        this.shipRepresentationArray.forEach(shipRepresentation => {
+            shipRepresentation.classList.remove("ship-placed", "ship-preview");
+        });
+        // Show ship representations for the user to place ships again
+        this.renderShipRepresentations();
+        //hide
+        this.computerBoard.classList.add("hidden");
+        this.rotateButton.classList.remove("hidden");
+        this.result.classList.add("hidden");
+        this.restartButton.classList.add("hidden");
+        // Reset game state variables
+        this.currentShipIndex = 0;
+        this.currentDirection = "horizontal";
+        this.isHumanTurn = true;
+
+    }
 }

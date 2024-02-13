@@ -97,4 +97,12 @@ export default class Gameboard {
             return true;
             }
         }
+
+        resetBoard() {
+          this.board.forEach((cell) => {
+            cell.hit = false;
+            cell.occupied = false;
+            cell.ship = null;
+          })
+        }
     }
