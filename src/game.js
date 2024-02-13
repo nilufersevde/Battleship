@@ -175,7 +175,6 @@ export default class Game {
         });
       }
 
-
    
 
     //the game logic with attacking checking the status rendering the grids and everything 
@@ -246,11 +245,7 @@ export default class Game {
         // Clear game boards and reset ship placements
         this.humanPlayer.gameBoard.resetBoard();
         this.computerPlayer.gameBoard.resetBoard();
-        // Reset ship representations
-        this.shipRepresentationArray.forEach(shipRepresentation => {
-            shipRepresentation.classList.remove("ship-placed", "ship-preview");
-        });
-        // Show ship representations for the user to place ships again
+        // Show ship representations for the user to place ships 
         this.renderShipRepresentations();
         //hide
         this.computerBoard.classList.add("hidden");
