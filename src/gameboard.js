@@ -6,13 +6,13 @@ export default class Gameboard {
         
         //initializes board with cells that has x,y coordinates, occupation status and the ship 
         initializeBoard() {
-            for (let i = 0; i < 10; i++) {
+          for (let i = 0; i < 10; i++) {
               this.board[i] = [];
               for (let j = 0; j < 10; j++) {
-                this.board[i].push({x:i, y:j, occupied:false, ship:null, hit:false});
+                  this.board[i].push({ x: i, y: j, occupied: false, ship: null, hit: false });
               }
-            }
           }
+      }
         
         //places the ship with coordinates and the direction 
         placeShip(x, y, ship, direction){
@@ -43,7 +43,6 @@ export default class Gameboard {
           
                 for (let i = 0; i < ship.length; i++) {
                   const cell = this.board[x + i][y];
-                  
                   cells.push(cell);
                   if (cells.some((cell => cell.occupied))) {
                     ship.coordinates =[];
@@ -94,8 +93,10 @@ export default class Gameboard {
                         return false;
                     }
                 }
-            return true;
+           
             }
+
+            return true;
         }
 
         resetBoard() {

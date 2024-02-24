@@ -1,0 +1,121 @@
+* {
+    font-family: "Play", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+/* Resetting some default margin and padding for better layout */
+body, h1, h2, h3, p, div {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Play', sans-serif;
+}
+
+.board {
+    width:400px;
+    height:400px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Centering content vertically and horizontally */
+
+/* Styling for the game title */
+h1 {
+    font-size: 27px;
+    margin-bottom: 10px;
+}
+
+/* Styling for the game instructions */
+h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+/* Container for the game boards and buttons */
+.playground {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Container for user and computer game boards */
+.game-boards {
+    display: flex;
+    gap: 50px;
+}
+
+/* Styling for each game board */
+.user-area, .computer-ship-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Styling for the headers above the game boards */
+h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+/* Styling for the ship preview and placed cells */
+.ship-preview {
+    background-color: #52A2FF;
+}
+
+.ship-placed {
+    background-color: #52A2FF; /* You can use a different color if you prefer */
+}
+
+/* Styling for the individual cells on the game board */
+.cell {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Styling for hit cells */
+.cell.hit {
+    background-color: #ff0055;
+}
+
+/* Styling for occupied cells */
+.cell.occupied {
+    background-color: #52A2FF;
+}
+
+.ShipAreaDOM {
+    display: flex;
+    flex-direction: column; /* Make sure ships are displayed horizontally */
+    gap:10px;
+    align-items:flex-start;
+    position: absolute;
+    left: 55vw;
+    top: 20vh;
+}
+
+
+
+.ship-preview-rep {
+    background-color: #52A2FF;
+    display: flex;
+    flex-direction: row;
+}
+.ship-placed {
+    display: flex;
+    flex-direction: row;
+    background-color: #a9bacd;
+}
+
+.hidden, .hidden > * {
+    opacity: 0;
+    pointer-events: none;
+}
+
+

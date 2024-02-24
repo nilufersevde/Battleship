@@ -7,6 +7,8 @@ export default class Game {
         this.computerPlayer = new Player;
         this.humanBoardDOM = document.querySelector(".user-board");
         this.computerBoardDOM = document.querySelector(".computer-board");
+        this.computerShipAreaDOM = document.querySelector(".computer-ship-area");
+        this.ShipAreaDOM = document.querySelector(".ship-representations");
         this.rotateButton = document.querySelector(".rotate-button");
         this.restartButton = document.querySelector(".restart-button");
         this.currentDirection = "horizontal";
@@ -14,8 +16,8 @@ export default class Game {
         this.shipRepresentationArray = [];
         this.isHumanTurn = true;
         this.result = document.querySelector(".result");
-        this.computerBoard = null;  
-        this.initializeGame();
+        
+        this.initiliazeGame();
 
     }
 
@@ -24,9 +26,8 @@ export default class Game {
     initiliazeGame() {
 
           this.renderBoard(this.humanPlayer.gameboard.board, this.humanBoardDOM, 'h');
-          this.computerBoard = this.renderBoard(this.computerPlayer.gameboard.board, this.computerBoardDOM, 'c');
-          this.computerBoard.classList.add("hidden");
           this.computerPlayer.randomPlacement();
+          this.renderBoard(this.computerPlayer.gameboard.board, this.computerBoardDOM, 'c');
           this.handleShipRotation();
           this.renderShipRepresentations();
           this.placeShips();
@@ -37,38 +38,42 @@ export default class Game {
     }
 
     //method that renders a board 
-    renderBoard(boardData, boardDOM, prefix){
+    // Method that renders a board
+    renderBoard(boardData, boardDOM, prefix) {
+            boardDOM.innerHTML = "";
 
-        boardDOM.innerHTML = "";
-        let cellIndex = 0;
+            for (let i = 0; i < boardData.length; i++) {
+                for (let j = 0; j < boardData[i].length; j++) {
+                    const cell = boardData[i][j];
 
-        boardData.forEach(cell => {
-            const cellDOM = document.createElement("div");
-            cellDOM.classList.add("cell");
+                    const cellDOM = document.createElement("div");
+                    cellDOM.classList.add("cell");
 
-            if (cell.hit) {
-                cellDOM.classList.add("hit");
+                    if (cell.hit) {
+                        cellDOM.classList.add("hit");
+
+                    }
+
+                    if (boardDOM == this.humanBoardDOM ){
+                        if (cell.occupied) {
+                            cellDOM.classList.add("occupied");
+                    }}
+
+                    cellDOM.setAttribute("id", `${prefix}${i * 10 + j}`);
+                    boardDOM.appendChild(cellDOM);
             }
-
-            if (cell.occupied) {
-                cellDOM.classList.add("occupied");
-            }
-
-            cellDOM.setAttribute("id", `${prefix}${cellIndex}`);
-            cellIndex++;
-
-            boardDOM.appendChild(cellDOM); 
-        });
+        }
     }
 
 
      // Method to render ship representations
      renderShipRepresentations() {
 
-        this.computerBoardDOM.innerHTML = "";
+
+        this.computerBoardDOM.classList.add("hidden");
         this.humanPlayer.fleet.forEach((ship) => {
             const shipRepresentation = document.createElement("div");
-            shipRepresentation.classList.add("ship-preview");
+            shipRepresentation.classList.add("ship-preview-rep");
           
             for (let i = 0; i < ship.getShipLength(); i++) {
                 const cell = document.createElement("div");
@@ -76,8 +81,10 @@ export default class Game {
                 shipRepresentation.appendChild(cell);
             }
           
-            this.computerBoardDOM.appendChild(shipRepresentation);
-            this.shipRepresentations.push(shipRepresentation);
+            this.ShipAreaDOM.appendChild(shipRepresentation);
+            this.shipRepresentationArray.push(shipRepresentation);
+            this.ShipAreaDOM.classList.add("ShipAreaDOM");
+
         });
     }
 
@@ -86,10 +93,11 @@ export default class Game {
     placeShips() {
 
         //checks if all the ships are placed if yes removes the rotate button and renders the computer's board
-        if (currentShipIndex > this.humanPlayer.fleet){
+        if (this.currentShipIndex >= this.humanPlayer.fleet.length){
             this.rotateButton.classList.add("hidden");
-            this.computerBoardDOM.innerHTML = "";
-            this.computerBoard.classList.remove("hidden");
+            this.computerBoardDOM.classList.remove("hidden");
+            this.ShipAreaDOM.classList.add("hidden");
+            this.gamePlay() 
             return;
         }
 
@@ -153,8 +161,8 @@ export default class Game {
                 if (placed) {
 
                     this.renderBoard(this.humanPlayer.gameboard.board, this.humanBoardDOM, 'h');
-                    this.shipRepresentationArray[currentShipIndex].classList.remove("ship-preview");
-                    this.shipRepresentationArray[currentShipIndex].classList.add("ship-placed");
+                    this.shipRepresentationArray[this.currentShipIndex].classList.remove("ship-preview-rep");
+                    this.shipRepresentationArray[this.currentShipIndex].classList.add("ship-placed");
                     this.currentShipIndex++;
                     this.placeShips()
 
@@ -184,7 +192,6 @@ export default class Game {
         const computerBoardCells = this.computerBoardDOM.querySelectorAll(".cell");
 
         if (this.isHumanTurn) {
-
             computerBoardCells.forEach((cell) => {
 
                 if(!cell.classList.contains("hit")) {
@@ -203,38 +210,40 @@ export default class Game {
                         this.restartButton.classList.remove("hidden");
                         this.result.textContent = "You've won!";
                         this.result.classList.remove("hidden");
+                        console.log("yep");
                         return;
                       }
 
                     this.isHumanTurn = false;
-                    setTimeout(() => {
-                        this.gamePlay();
-                      }, 1000);
+                    this.gamePlay();
+                    console.log("alla alla")
+                      
 
                     //to allow player to only hit once 
                 }, {once: true});
-
-                } 
+    } 
                 
-        else {
-
-                this.computerPlayer.randomAttack( this.humanPlayer.gameboard);
-                this.renderBoard(this.humanPlayer.gameboard.board, this.humanBoardDOM, 'h');
-                
-                //if all the ships are sunk stop the game 
-                if (this.humanPlayer.gameboard.areAllSunk()) {
-                    this.restartButton.classList.remove("hidden");
-                    this.result.textContent = "You've lost, computer have won!";
-                    this.result.classList.remove("hidden");
-                    return;
-                    }
-
-                    this.isUserTurn = true;
-                    this.gamePlay();
-
-                }
+        
             })
         }
+
+        else {
+                
+            this.computerPlayer.randomAttack( this.humanPlayer.gameboard);
+            this.renderBoard(this.humanPlayer.gameboard.board, this.humanBoardDOM, 'h');
+            
+            //if all the ships are sunk stop the game 
+            if (this.humanPlayer.gameboard.areAllSunk()) {
+                this.restartButton.classList.remove("hidden");
+                this.result.textContent = "You've lost, computer have won!";
+                this.result.classList.remove("hidden");
+                return;
+                }
+
+                this.isUserTurn = true;
+                this.gamePlay();
+
+            }
 
     }
 
@@ -259,3 +268,4 @@ export default class Game {
 
     }
 }
+
