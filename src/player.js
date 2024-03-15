@@ -45,24 +45,10 @@ export default class Player {
         })
     }
 
-    randomAttack(enemyboard){
-
-        if (this.isPlayerTurn){
-        const received = false;
-
-        while(!received){   
-            
+    randomAttack(enemyboard){  
             const x = Math.floor(Math.random()*10);
             const y = Math.floor(Math.random()*10);
-            received = enemyboard.receiveAttack(x, y);
-        }
-    
-        this.switchTurn();}
-
-
-        else {
-            return false;
-        }
+            enemyboard.receiveAttack(x, y);
     }
 
 }

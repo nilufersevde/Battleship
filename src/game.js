@@ -16,7 +16,6 @@ export default class Game {
         this.shipRepresentationArray = [];
         this.isHumanTurn = true;
         this.result = document.querySelector(".result");
-        
         this.initiliazeGame();
 
     }
@@ -208,19 +207,12 @@ export default class Game {
                     //if all the ships are sunk stop the game 
                     if (this.computerPlayer.gameboard.areAllSunk()) {
                         this.restartButton.classList.remove("hidden");
-                        this.result.textContent = "You've won!";
-                        this.result.classList.remove("hidden");
-                        console.log("yep");
                         return;
                       }
 
                     this.isHumanTurn = false;
                     this.gamePlay();
-                    console.log("alla alla")
-                      
-
-                    //to allow player to only hit once 
-                }, {once: true});
+                });
     } 
                 
         
@@ -229,19 +221,11 @@ export default class Game {
 
         else {
                 
-            this.computerPlayer.randomAttack( this.humanPlayer.gameboard);
+            this.computerPlayer.randomAttack(this.humanPlayer.gameboard);
             this.renderBoard(this.humanPlayer.gameboard.board, this.humanBoardDOM, 'h');
-            
-            //if all the ships are sunk stop the game 
-            if (this.humanPlayer.gameboard.areAllSunk()) {
-                this.restartButton.classList.remove("hidden");
-                this.result.textContent = "You've lost, computer have won!";
-                this.result.classList.remove("hidden");
-                return;
-                }
 
-                this.isUserTurn = true;
-                this.gamePlay();
+            this.isHumanTurn = true;
+            this.gamePlay();
 
             }
 
