@@ -48,15 +48,23 @@ export default class Game {
                     const cellDOM = document.createElement("div");
                     cellDOM.classList.add("cell");
 
-                    if (cell.hit) {
-                        cellDOM.classList.add("hit");
-
-                    }
-
                     if (boardDOM == this.humanBoardDOM ){
                         if (cell.occupied) {
                             cellDOM.classList.add("occupied");
                     }}
+
+                    if (cell.occupied){
+                    if (cell.hit) {
+                        cellDOM.classList.add("hit-ship");
+
+                    }}
+
+                    if(!cell.occupied){
+                        if (cell.hit) {
+                            cellDOM.classList.add("hit");
+    
+                        }   
+                    }
 
                     cellDOM.setAttribute("id", `${prefix}${i * 10 + j}`);
                     boardDOM.appendChild(cellDOM);
@@ -204,6 +212,7 @@ export default class Game {
                     //attack the cell that was clicked on 
                     this.humanPlayer.attack(x, y, this.computerPlayer.gameboard);
                     this.renderBoard(this.computerPlayer.gameboard.board, this.computerBoardDOM, 'c');
+                    console.log(this.computerPlayer.gameboard.board);
                     //if all the ships are sunk stop the game 
                     if (this.computerPlayer.gameboard.areAllSunk()) {
                         this.restartButton.classList.remove("hidden");

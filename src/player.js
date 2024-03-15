@@ -7,24 +7,11 @@ export default class Player {
 
     this.gameboard = new Gameboard();
     this.fleet = [new Ship(1), new Ship(2), new Ship(3), new Ship(4), new Ship(5)];
-    this.isPlayerTurn = true;
-
     }
 
-    switchTurn(){
-
-        this.isPlayerTurn = !this.isPlayerTurn;
-
-    }
 
     attack(x, y, enemyboard){
-
-        if (this.isPlayerTurn){
-        this.switchTurn();
-        return enemyboard.receiveAttack(x, y);}
-
-        else return false;
-
+        return enemyboard.receiveAttack(x, y);
     }
 
     randomPlacement(){

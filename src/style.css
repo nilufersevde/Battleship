@@ -90,6 +90,10 @@ h3 {
     background-color: #52A2FF;
 }
 
+.cell.hit-ship {
+    background-color: #434343;
+}
+
 .ShipAreaDOM {
     display: flex;
     flex-direction: column; /* Make sure ships are displayed horizontally */
