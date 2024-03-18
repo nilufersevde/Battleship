@@ -1,6 +1,6 @@
 # Battleship
 
-Battleship Game
+Battleship Game 
 
 Overview
 
